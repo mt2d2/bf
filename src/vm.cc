@@ -8,7 +8,6 @@
 VM::VM(Program prog) : program(std::move(prog)) {}
 
 void VM::run() {
-  const auto &loops = program.getLoops();
   const auto &instrs = program.getInstrs();
   const size_t size = instrs.size();
 
@@ -42,7 +41,7 @@ void VM::run() {
       if (*ptr > 0) {
         pcs.push(pc);
       } else {
-        pc = loops.at(pc);
+        pc = instr.getArg();
       }
       break;
     case Jmp:

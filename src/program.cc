@@ -5,17 +5,12 @@
 #include <iostream>
 #include <stack>
 
-Program::Program(std::vector<IR> in)
-    : instrs(std::move(in)), loops(std::unordered_map<size_t, size_t>()) {
+Program::Program(std::vector<IR> in) : instrs(std::move(in)) {
   foldInstrs();
   findLoops();
 }
 
 const std::vector<IR> &Program::getInstrs() const { return instrs; }
-
-const std::unordered_map<size_t, size_t> &Program::getLoops() const {
-  return loops;
-}
 
 void Program::debug() const {
   for (const auto i : instrs) {
@@ -38,7 +33,7 @@ void Program::findLoops() {
 
       const auto top = open.top();
       open.pop();
-      loops[top] = pc;
+      instrs[top] = IR(Op::Label, pc);
     } break;
     default:
       break;
