@@ -8,13 +8,17 @@
 VM::VM(Program prog) : program(std::move(prog)) {}
 
 void VM::run() {
+  const auto &loops = program.getLoops();
+  const auto &instrs = program.getInstrs();
+  const size_t size = program.getInstrs().size();
+
   std::stack<size_t> pcs;
+
   char *mem = static_cast<char *>(calloc(30000, 1));
   char *ptr = mem;
 
-  const size_t size = program.getInstrs().size();
   for (size_t pc = 0; pc < size; ++pc) {
-    switch (program.getInstrs()[pc].getOp()) {
+    switch (instrs[pc].getOp()) {
     case IncPtr:
       ++ptr;
       break;
@@ -37,7 +41,7 @@ void VM::run() {
       if (*ptr > 0) {
         pcs.push(pc);
       } else {
-        pc = program.getLoops().at(pc);
+        pc = loops.at(pc);
       }
       break;
     case Jmp:

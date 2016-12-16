@@ -6,13 +6,15 @@
 #include <stack>
 
 Program::Program(std::vector<IR> in)
-    : instrs(std::move(in)), loops(std::map<size_t, size_t>()) {
+    : instrs(std::move(in)), loops(std::unordered_map<size_t, size_t>()) {
   findLoops();
 }
 
 const std::vector<IR> &Program::getInstrs() const { return instrs; }
 
-const std::map<size_t, size_t> &Program::getLoops() const { return loops; }
+const std::unordered_map<size_t, size_t> &Program::getLoops() const {
+  return loops;
+}
 
 void Program::findLoops() {
   // this algorithm was adopted from https://github.com/gensym-vla/PyBrainFuck
