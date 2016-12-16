@@ -16,7 +16,7 @@ const std::map<size_t, size_t> &Program::getLoops() const { return loops; }
 
 void Program::findLoops() {
   // this algorithm was adopted from https://github.com/gensym-vla/PyBrainFuck
-  // please see LICENSE for the appropriate LICENSE
+  // please see LICENSE for the appropriate copyright
   std::stack<size_t> open;
   size_t pc = 0;
   for (const auto i : instrs) {
