@@ -12,11 +12,11 @@ public:
   explicit Program(std::vector<IR> in);
   const std::vector<IR> &getInstrs() const;
   const std::unordered_map<size_t, size_t> &getLoops() const;
-
   void debug() const;
 
 private:
   void findLoops();
+  void foldInstrs();
 
   std::vector<IR> instrs;
   std::unordered_map<size_t, size_t> loops;
