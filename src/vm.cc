@@ -18,18 +18,19 @@ void VM::run() {
   char *ptr = mem;
 
   for (size_t pc = 0; pc < size; ++pc) {
-    switch (instrs[pc].getOp()) {
+    const auto instr = instrs[pc];
+    switch (instr.getOp()) {
     case IncPtr:
-      ++ptr;
+      ptr += instr.getArg();
       break;
     case DecPtr:
-      --ptr;
+      ptr -= instr.getArg();
       break;
     case IncByte:
-      ++*ptr;
+      *ptr += instr.getArg();
       break;
     case DecByte:
-      --*ptr;
+      *ptr -= instr.getArg();
       break;
     case PutChar:
       putchar(*ptr);
