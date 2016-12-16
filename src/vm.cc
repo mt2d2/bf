@@ -10,7 +10,7 @@ VM::VM(Program prog) : program(std::move(prog)) {}
 void VM::run() {
   const auto &loops = program.getLoops();
   const auto &instrs = program.getInstrs();
-  const size_t size = program.getInstrs().size();
+  const size_t size = instrs.size();
 
   std::stack<size_t> pcs;
 
