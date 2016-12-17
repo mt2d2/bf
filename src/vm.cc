@@ -9,8 +9,7 @@ void VM::run() {
   const auto &instrs = program.getInstrs();
   const size_t size = instrs.size();
 
-  char *mem = static_cast<char *>(calloc(30000, 1));
-  char *ptr = mem;
+  char *ptr = static_cast<char *>(calloc(30000, 1));
 
   for (size_t pc = 0; pc < size; ++pc) {
     const auto instr = instrs[pc];
