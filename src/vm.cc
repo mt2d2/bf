@@ -1,5 +1,6 @@
 #include "vm.h"
 
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 
@@ -9,7 +10,7 @@ void VM::run() {
   const auto &instrs = program.getInstrs();
   const size_t size = instrs.size();
 
-  char *ptr = static_cast<char *>(calloc(30000, 1));
+  uint8_t *ptr = static_cast<uint8_t *>(calloc(30000, 1));
 
   for (size_t pc = 0; pc < size; ++pc) {
     const auto instr = instrs[pc];
