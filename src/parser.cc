@@ -30,5 +30,7 @@ Program parse(const std::string &file) {
     }
   }
 
+  instrs.push_back(IR(Hlt));
+
   return Program(instrs);
 }

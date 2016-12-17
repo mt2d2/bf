@@ -43,6 +43,9 @@ void VM::run() {
         pc = instr.getArg();
       }
       break;
+    case Hlt:
+      return;
+      break;
     }
   }
 }

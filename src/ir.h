@@ -14,13 +14,15 @@ enum Op : uint16_t {
   GetChar,
   Label,
   Jmp,
+  Hlt
 };
 
 static const std::map<Op, std::string> Op2Str = {
     {Op::IncPtr, "IncPtr"},   {Op::DecPtr, "DecPtr"},
     {Op::IncByte, "IncByte"}, {Op::DecByte, "DecByte"},
     {Op::PutChar, "PutChar"}, {Op::GetChar, "GetChar"},
-    {Op::Label, "Label"},     {Op::Jmp, "Jmp"}};
+    {Op::Label, "Label"},     {Op::Jmp, "Jmp"},
+    {Op::Hlt, "Hlt"}};
 
 class IR {
 public:
