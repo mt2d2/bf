@@ -4,6 +4,9 @@
 #include <cstdio>
 #include <cstdlib>
 
+#define likely(x) __builtin_expect((long)(x), 1)
+#define unlikely(x) __builtin_expect((long)(x), 0)
+
 VM::VM(Program prog) : program(std::move(prog)) {}
 
 #define DISPATCH                                                               \
@@ -41,12 +44,12 @@ GetChar:
   *ptr = getchar();
   DISPATCH;
 Label:
-  if (!*ptr) {
+  if (unlikely(!*ptr)) {
     pc = instr.getArg();
   }
   DISPATCH;
 Jmp:
-  if (*ptr) {
+  if (likely(*ptr)) {
     pc = instr.getArg();
   }
   DISPATCH;
