@@ -34,12 +34,14 @@ void VM::run() {
       *ptr = getchar();
       break;
     case Label:
-      if (*ptr <= 0) {
+      if (!*ptr) {
         pc = instr.getArg();
       }
       break;
     case Jmp:
-      pc = instr.getArg();
+      if (*ptr) {
+        pc = instr.getArg();
+      }
       break;
     }
   }
