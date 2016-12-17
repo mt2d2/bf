@@ -31,8 +31,8 @@ public:
   explicit IR(Op op);
   IR(Op op, uint16_t arg);
 
-  Op getOp() const;
-  uint16_t getArg() const;
+  Op getOp() const { return (Op)(uint16_t)(v >> 16); }
+  uint16_t getArg() const { return v; }
 
 private:
   void set(Op op, uint16_t arg);
