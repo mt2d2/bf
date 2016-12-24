@@ -9,10 +9,6 @@
 
 VM::VM(Program prog) : program(std::move(prog)) {}
 
-#define DISPATCH                                                               \
-  instr = instrs[pc++];                                                        \
-  goto *lbls[instr.getOp()];
-
 void VM::run() {
   const auto &instrs = program.getInstrs();
   uint8_t *ptr = static_cast<uint8_t *>(calloc(30000, 1));
@@ -23,6 +19,11 @@ void VM::run() {
 
   size_t pc = 0;
   auto instr = instrs[pc];
+
+#define DISPATCH                                                               \
+  instr = instrs[pc++];                                                        \
+  goto *lbls[instr.getOp()];
+
   DISPATCH;
 
 IncPtr:
