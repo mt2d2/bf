@@ -30,7 +30,7 @@ class IR {
 public:
   // 32-28, 28-14, 14-0
   // Op     A      B
-  // 4      14     14
+  // 32     16     16
   uint64_t v;
 
   explicit IR(Op op);
