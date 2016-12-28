@@ -17,7 +17,7 @@ enum Op {
   Clear,
   Hlt
 };
-static_assert(Op::Hlt <= (1l << 32), "4-bits opcode overflow");
+static_assert(Op::Hlt <= (1uLL << 32), "32 bits opcode overflow");
 
 static const std::map<Op, std::string> Op2Str = {
     {Op::IncPtr, "IncPtr"},   {Op::DecPtr, "DecPtr"},
