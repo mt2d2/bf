@@ -50,7 +50,6 @@ public:
 private:
   void set(Op op, uint16_t a, int16_t b);
 };
-
 static_assert(sizeof(IR) == sizeof(uint64_t), "IR must be 64 bits");
 
 #endif // IR_H
