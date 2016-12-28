@@ -4,7 +4,9 @@
 
 IR::IR(Op op) : v(0) { set(op, 1, 0); }
 
-IR::IR(Op op, uint16_t arg) : v(0) { set(op, arg, 0); }
+IR::IR(Op op, uint16_t a) : v(0) { set(op, a, 0); }
+
+IR::IR(Op op, uint16_t a, uint16_t b) : v(0) { set(op, a, b); }
 
 void IR::set(Op op, uint16_t a, uint16_t b) {
   assert(a < (1 << 14));

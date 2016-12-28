@@ -22,7 +22,8 @@ public:
   uint32_t v;
 
   explicit IR(Op op);
-  IR(Op op, uint16_t arg);
+  IR(Op op, uint16_t a);
+  IR(Op op, uint16_t a, uint16_t b);
 
   Op getOp() const { return (Op)(uint8_t)(v >> 28); }
   uint16_t getA() const {
