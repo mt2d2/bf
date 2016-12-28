@@ -32,7 +32,7 @@ public:
   }
   uint16_t getB() const {
     uint32_t arg = 0xfffffff & v;
-    return arg;
+    return 0x3fff & arg;
   }
 
 private:

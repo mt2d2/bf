@@ -33,10 +33,10 @@ DecPtr:
   ptr -= instr.getA();
   DISPATCH;
 IncByte:
-  *ptr += instr.getA();
+  *(ptr + instr.getB()) += instr.getA();
   DISPATCH;
 DecByte:
-  *ptr -= instr.getA();
+  *(ptr + instr.getB()) -= instr.getA();
   DISPATCH;
 PutChar:
   putchar(*ptr);
