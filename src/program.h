@@ -16,6 +16,7 @@ private:
   void findLoops();
   void foldRepeated();
   void foldMovement();
+  void foldClear();
 
   std::vector<IR> instrs;
 };

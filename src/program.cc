@@ -9,6 +9,7 @@
 Program::Program(std::vector<IR> in) : instrs(std::move(in)) {
   foldRepeated();
   foldMovement();
+  foldClear();
   findLoops();
 }
 
@@ -107,6 +108,21 @@ void Program::foldMovement() {
     } else if (isMod(it)) {
       *it = IR(it->getOp(), it->getA(), move);
       ++it;
+    } else {
+      ++it;
+    }
+  }
+}
+
+void Program::foldClear() {
+  auto it = instrs.begin();
+  while (it != instrs.end()) {
+    // [+] or [-]
+    if (it->getOp() == Op::Label &&
+        ((it + 1)->getOp() == Op::IncByte || (it + 1)->getOp() == DecByte) &&
+        (it + 1 + 1)->getOp() == Op::Jmp) {
+      it = instrs.erase(it, it + 2 + 1);
+      it = instrs.insert(it, IR(Op::Clear, 0));
     } else {
       ++it;
     }

@@ -13,9 +13,9 @@ void VM::run() {
   const auto &instrs = program.getInstrs();
   uint8_t *ptr = static_cast<uint8_t *>(calloc(30000, 1));
 
-  static const void *lbls[] = {&&IncPtr,  &&DecPtr,  &&IncByte,
-                               &&DecByte, &&PutChar, &&GetChar,
-                               &&Label,   &&Jmp,     &&Hlt};
+  static const void *lbls[] = {&&IncPtr,  &&DecPtr,  &&IncByte, &&DecByte,
+                               &&PutChar, &&GetChar, &&Label,   &&Jmp,
+                               &&Clear,   &&Hlt};
 
   size_t pc = 0;
   auto instr = instrs[pc];
@@ -53,6 +53,9 @@ Jmp:
   if (likely(*ptr)) {
     pc = instr.getA();
   }
+  DISPATCH;
+Clear:
+  *ptr = 0;
   DISPATCH;
 Hlt:
   return;
