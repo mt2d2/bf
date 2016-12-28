@@ -16,6 +16,7 @@ enum Op : uint16_t {
   Jmp,
   Hlt
 };
+static_assert(Op::Hlt < 16, "16-bits opcode overflow");
 
 static const std::map<Op, std::string> Op2Str = {
     {Op::IncPtr, "IncPtr"},   {Op::DecPtr, "DecPtr"},
