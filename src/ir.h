@@ -25,7 +25,7 @@ public:
   IR(Op op, uint16_t arg);
 
   Op getOp() const { return (Op)(uint8_t)(v >> 28); }
-  uint16_t getArg() const {
+  uint16_t getA() const {
     uint32_t arg = 0xfffffff & v;
     return arg >> 14;
   }

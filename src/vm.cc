@@ -27,16 +27,16 @@ void VM::run() {
   DISPATCH;
 
 IncPtr:
-  ptr += instr.getArg();
+  ptr += instr.getA();
   DISPATCH;
 DecPtr:
-  ptr -= instr.getArg();
+  ptr -= instr.getA();
   DISPATCH;
 IncByte:
-  *ptr += instr.getArg();
+  *ptr += instr.getA();
   DISPATCH;
 DecByte:
-  *ptr -= instr.getArg();
+  *ptr -= instr.getA();
   DISPATCH;
 PutChar:
   putchar(*ptr);
@@ -46,12 +46,12 @@ GetChar:
   DISPATCH;
 Label:
   if (unlikely(!*ptr)) {
-    pc = instr.getArg();
+    pc = instr.getA();
   }
   DISPATCH;
 Jmp:
   if (likely(*ptr)) {
-    pc = instr.getArg();
+    pc = instr.getA();
   }
   DISPATCH;
 Hlt:

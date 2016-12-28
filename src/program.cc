@@ -14,7 +14,8 @@ const std::vector<IR> &Program::getInstrs() const { return instrs; }
 
 void Program::debug() const {
   for (const auto i : instrs) {
-    std::cout << Op2Str.at(i.getOp()) << ": " << i.getArg() << std::endl;
+    std::cout << Op2Str.at(i.getOp()) << ", a: " << i.getA()
+              << " b: " << i.getB() << std::endl;
   }
 }
 
