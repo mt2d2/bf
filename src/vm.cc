@@ -39,10 +39,10 @@ DecByte:
   *(ptr + instr.getB()) -= instr.getA();
   DISPATCH;
 PutChar:
-  putchar(*ptr);
+  putchar(*(ptr + instr.getB()));
   DISPATCH;
 GetChar:
-  *ptr = getchar();
+  *(ptr + instr.getB()) = getchar();
   DISPATCH;
 Label:
   if (unlikely(!*ptr)) {

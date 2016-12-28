@@ -23,20 +23,25 @@ public:
 
   explicit IR(Op op);
   IR(Op op, uint16_t a);
-  IR(Op op, uint16_t a, uint16_t b);
+  IR(Op op, uint16_t a, int16_t b);
 
   Op getOp() const { return (Op)(uint8_t)(v >> 28); }
   uint16_t getA() const {
     uint32_t arg = 0xfffffff & v;
     return arg >> 14;
   }
-  uint16_t getB() const {
+  int16_t getB() const {
     uint32_t arg = 0xfffffff & v;
-    return 0x3fff & arg;
+    uint16_t masked = 0x3fff & arg;
+
+    // http://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend
+    // Public Domain
+    const auto signBit = 1 << (14 - 1);
+    return (masked ^ signBit) - signBit;
   }
 
 private:
-  void set(Op op, uint16_t a, uint16_t b);
+  void set(Op op, uint16_t a, int16_t b);
 };
 
 static_assert(sizeof(IR) == sizeof(uint32_t),
