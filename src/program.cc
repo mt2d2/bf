@@ -20,7 +20,6 @@ void Program::debug() const {
   for (const auto i : instrs) {
     for (unsigned i = 0; i < indent; ++i)
       std::cout << "  ";
-
     std::cout << Op2Str.at(i.getOp()) << " [" << i.getA() << ", " << i.getB()
               << "] " << std::endl;
 
