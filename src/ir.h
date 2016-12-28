@@ -5,18 +5,8 @@
 #include <map>
 #include <string>
 
-enum Op : uint16_t {
-  IncPtr,
-  DecPtr,
-  IncByte,
-  DecByte,
-  PutChar,
-  GetChar,
-  Label,
-  Jmp,
-  Hlt
-};
-static_assert(Op::Hlt < 16, "16-bits opcode overflow");
+enum Op { IncPtr, DecPtr, IncByte, DecByte, PutChar, GetChar, Label, Jmp, Hlt };
+static_assert(Op::Hlt == 8, "16-bits opcode overflow");
 
 static const std::map<Op, std::string> Op2Str = {
     {Op::IncPtr, "IncPtr"},   {Op::DecPtr, "DecPtr"},
@@ -27,16 +17,25 @@ static const std::map<Op, std::string> Op2Str = {
 
 class IR {
 public:
+  // 32-28, 28-14, 14-0
+  // Op     A      B
   uint32_t v;
 
   explicit IR(Op op);
   IR(Op op, uint16_t arg);
 
-  Op getOp() const { return (Op)(uint16_t)(v >> 16); }
-  uint16_t getArg() const { return v; }
+  Op getOp() const { return (Op)(uint8_t)(v >> 28); }
+  uint16_t getArg() const {
+    uint32_t arg = 0xfffffff & v;
+    return arg >> 14;
+  }
+  uint16_t getB() const {
+    uint32_t arg = 0xfffffff & v;
+    return arg;
+  }
 
 private:
-  void set(Op op, uint16_t arg);
+  void set(Op op, uint16_t a, uint16_t b);
 };
 
 static_assert(sizeof(IR) == sizeof(uint32_t),
