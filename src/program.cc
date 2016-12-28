@@ -6,7 +6,8 @@
 #include <stack>
 
 Program::Program(std::vector<IR> in) : instrs(std::move(in)) {
-  foldInstrs();
+  foldRepeated();
+  foldMovement();
   findLoops();
 }
 
@@ -45,7 +46,7 @@ void Program::findLoops() {
   assert(open.size() == 0);
 }
 
-void Program::foldInstrs() {
+void Program::foldRepeated() {
   static const Op tgts[] = {Op::DecPtr, Op::IncPtr, Op::IncByte, Op::DecByte};
 
   for (const auto tgtOp : tgts) {
@@ -67,3 +68,5 @@ void Program::foldInstrs() {
     }
   }
 }
+
+void Program::foldMovement() {}

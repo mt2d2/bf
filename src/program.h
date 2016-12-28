@@ -14,7 +14,8 @@ public:
 
 private:
   void findLoops();
-  void foldInstrs();
+  void foldRepeated();
+  void foldMovement();
 
   std::vector<IR> instrs;
 };
