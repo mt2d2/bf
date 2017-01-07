@@ -14,7 +14,9 @@ enum Op {
   GetChar,
   Label,
   Jmp,
-  Clear,
+  Assign,
+  MulAdd,
+  MulSub,
   Hlt
 };
 static_assert(Op::Hlt <= (1uLL << 32), "32 bits opcode overflow");
@@ -24,7 +26,8 @@ static const std::map<Op, std::string> Op2Str = {
     {Op::IncByte, "IncByte"}, {Op::DecByte, "DecByte"},
     {Op::PutChar, "PutChar"}, {Op::GetChar, "GetChar"},
     {Op::Label, "Label"},     {Op::Jmp, "Jmp"},
-    {Op::Clear, "Clear"},     {Op::Hlt, "Hlt"}};
+    {Op::Assign, "Assign"},   {Op::MulAdd, "MulAdd"},
+    {Op::MulSub, "MulSub"},   {Op::Hlt, "Hlt"}};
 
 class IR {
 public:

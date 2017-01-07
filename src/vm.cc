@@ -15,7 +15,7 @@ void VM::run() {
 
   static const void *lbls[] = {&&IncPtr,  &&DecPtr,  &&IncByte, &&DecByte,
                                &&PutChar, &&GetChar, &&Label,   &&Jmp,
-                               &&Clear,   &&Hlt};
+                               &&Assign,  &&MulAdd,  &&MulSub,  &&Hlt};
 
   size_t pc = 0;
   auto instr = instrs[pc];
@@ -54,8 +54,14 @@ Jmp:
     pc = instr.getA();
   }
   DISPATCH;
-Clear:
-  *ptr = 0;
+Assign:
+  *ptr = instr.getA();
+  DISPATCH;
+MulAdd:
+  *(ptr + instr.getB()) += *ptr * instr.getA();
+  DISPATCH;
+MulSub:
+  *(ptr + instr.getB()) -= *ptr * instr.getA();
   DISPATCH;
 Hlt:
   return;
