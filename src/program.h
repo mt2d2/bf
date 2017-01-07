@@ -17,6 +17,7 @@ private:
   void foldRepeated();
   void foldMovement();
   void foldMultiply();
+  void foldAssign();
 
   std::vector<IR> instrs;
 };

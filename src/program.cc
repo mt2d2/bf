@@ -12,6 +12,7 @@ Program::Program(std::vector<IR> in) : instrs(std::move(in)) {
   foldRepeated();
   foldMovement();
   foldMultiply();
+  foldAssign();
   findLoops();
 }
 
@@ -186,6 +187,25 @@ void Program::foldMultiply() {
           ++it;
         }
         it = instrs.insert(it, IR(Op::Assign, 0));
+      } else {
+        ++it;
+      }
+    } else {
+      ++it;
+    }
+  }
+}
+
+void Program::foldAssign() {
+  auto it = instrs.begin();
+  while (it != instrs.end()) {
+    if (it->getOp() == Op::Assign) {
+      const auto cVal = it->getA();
+      const auto nVal = (it + 1)->getA();
+      const auto nPos = (it + 1)->getB();
+      if ((it + 1)->getOp() == Op::IncByte && nPos == 0) {
+        it = instrs.erase(it, it + 1 + 1);
+        it = instrs.insert(it, IR(Op::Assign, cVal + nVal));
       } else {
         ++it;
       }
