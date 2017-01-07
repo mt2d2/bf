@@ -15,6 +15,5 @@ int main(int argc, char **argv) {
   }
 
   const auto program = parse(argv[1]);
-  program.debug();
   VM(program).run();
 }
