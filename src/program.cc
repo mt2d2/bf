@@ -67,12 +67,10 @@ void Program::foldRepeated() {
     while (it != instrs.end()) {
       if (it->getOp() == tgtOp) {
         auto jt = it;
-
-        size_t sz = 0;
         while (it->getOp() == tgtOp && it != instrs.end()) {
-          ++it, ++sz;
+          ++it;
         }
-        *jt = IR(tgtOp, sz);
+        *jt = IR(tgtOp, std::distance(jt, it));
         it = instrs.erase(jt + 1, it);
       } else {
         ++it;
