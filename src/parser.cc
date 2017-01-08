@@ -19,7 +19,7 @@ static bool isBfChar(char ch) {
 Program parse(const std::string &file) {
   std::vector<IR> instrs;
 
-  char ch;
+  char ch = 'a';
   std::fstream fin(file, std::fstream::in);
   while (fin >> std::noskipws >> ch) {
     if (isBfChar(ch)) {

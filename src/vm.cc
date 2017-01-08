@@ -7,16 +7,19 @@
 #define likely(x) __builtin_expect((long)(x), 1)
 #define unlikely(x) __builtin_expect((long)(x), 0)
 
-VM::VM(Program prog) : program(std::move(prog)) {}
+VM::VM(Program prog)
+    : program(std::move(prog)), tape(static_cast<uint8_t *>(calloc(30000, 1))) {
+}
+
+VM::~VM() { free(tape); }
 
 void VM::run() {
-  const auto &instrs = program.getInstrs();
-  uint8_t *ptr = static_cast<uint8_t *>(calloc(30000, 1));
-
   static const void *lbls[] = {&&IncPtr,  &&DecPtr,  &&IncByte, &&DecByte,
                                &&PutChar, &&GetChar, &&Label,   &&Jmp,
                                &&Assign,  &&MulAdd,  &&MulSub,  &&Hlt};
 
+  const auto &instrs = program.getInstrs();
+  uint8_t *ptr = tape;
   size_t pc = 0;
   auto instr = instrs[pc];
 
