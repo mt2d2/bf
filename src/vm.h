@@ -1,7 +1,7 @@
 #ifndef VM_H
 #define VM_H
 
-#include <cstdlib>
+#include <cstdint>
 
 #include "program.h"
 
