@@ -18,10 +18,10 @@ void VM::run() {
                                &&PutChar, &&GetChar, &&Label,   &&Jmp,
                                &&Assign,  &&MulAdd,  &&MulSub,  &&Hlt};
 
-  const auto &instrs = program.getInstrs();
+  auto &instrs = program.getInstrs();
   uint8_t *ptr = tape;
   size_t pc = 0;
-  auto instr = instrs[pc];
+  IR &instr = instrs[pc];
 
 #define DISPATCH                                                               \
   instr = instrs[pc++];                                                        \

@@ -9,7 +9,7 @@
 class Program {
 public:
   explicit Program(std::vector<IR> in);
-  const std::vector<IR> &getInstrs() const;
+  std::vector<IR> &getInstrs();
   void debug() const;
 
 private:

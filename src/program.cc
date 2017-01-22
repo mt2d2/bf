@@ -16,7 +16,7 @@ Program::Program(std::vector<IR> in) : instrs(std::move(in)) {
   findLoops();
 }
 
-const std::vector<IR> &Program::getInstrs() const { return instrs; }
+std::vector<IR> &Program::getInstrs() { return instrs; }
 
 void Program::debug() const {
   unsigned indent = 0;
