@@ -53,9 +53,7 @@ Label:
   }
   DISPATCH;
 Jmp:
-  if (likely(*ptr)) {
-    pc = instr.getA();
-  }
+  pc = instr.getA();
   DISPATCH;
 Assign:
   *ptr = instr.getA();

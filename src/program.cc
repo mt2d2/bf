@@ -48,7 +48,7 @@ void Program::findLoops() {
 
       const auto top = open.top();
       open.pop();
-      instrs[top] = IR(Op::Label, pc);
+      instrs[top] = IR(Op::Label, pc + 1);
       instrs[pc] = IR(Op::Jmp, top);
     } break;
     default:
