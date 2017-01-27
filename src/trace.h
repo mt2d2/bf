@@ -18,6 +18,7 @@ public:
   State record(const IR *ir);
   bool isComplete() const;
   void debug() const;
+  void compile();
 
 private:
   bool isLoopHead(const IR *ir) const;

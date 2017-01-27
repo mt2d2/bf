@@ -1,3 +1,4 @@
+src/compile.cc
 *.o
 *.d
 bf

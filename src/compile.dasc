@@ -1,0 +1,17 @@
+#include "trace.h"
+
+#include "dynasm/dasm_proto.h"
+#include "dynasm/dasm_x86.h"
+
+|.arch x64
+
+void Trace::compile() {
+  // Compilation using DynASM is very much inspired by the follow tutorial:
+  // https://corsix.github.io/dynasm-doc/tutorial.html
+  // Many thanks to Peter Cawley for documentation and to Mike Pall for DynASM.
+  // Please refer to LICENSE for details.
+  dasm_State *d;
+
+  |.section code
+  dasm_init(&d, DASM_MAXSECTION);
+}

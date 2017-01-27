@@ -1,13 +1,18 @@
 EXE=bf
-OBJS=parser.o ir.o program.o trace.o vm.o main.o
+PRE=compile.cc
+OBJS=parser.o ir.o program.o trace.o compile.o vm.o main.o
 DEPS=$(OBJS:.o=.d)
 
 CXX=clang++
 CXXFLAGS=-std=c++11 -Wall -Werror -Ofast -march=native -g
 LDFLAGS=
+LUA=luajit
 
-$(EXE): $(OBJS)
+$(EXE): $(PRE) $(OBJS)
 	$(CXX) $(LDFLAGS) $(OBJS) -o $@
+
+%.cc: %.dasc
+		$(LUA) dynasm/dynasm.lua -o $@ -D X64 $<
 
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) -MMD -c $< -o $@
@@ -16,4 +21,4 @@ $(EXE): $(OBJS)
 
 .PHONY=clean
 clean:
-	-rm -rf $(DEPS) $(OBJS) $(EXE)
+	-rm -rf $(DEPS) $(PRE) $(OBJS) $(EXE)

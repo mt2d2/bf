@@ -2,9 +2,6 @@
 
 #include <iostream>
 
-#include "dynasm/dasm_proto.h"
-#include "dynasm/dasm_x86.h"
-
 Trace::Trace() : instrs(std::vector<const IR *>()) {}
 
 Trace::State Trace::record(const IR *ir) {
@@ -30,7 +27,6 @@ done:
 bool Trace::isComplete() const { return lastState == Trace::State::Complete; }
 
 void Trace::debug() const {
-
   for (const auto *ir : instrs) {
     std::cout << *ir << std::endl;
   }
