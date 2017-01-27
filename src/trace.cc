@@ -1,8 +1,19 @@
 #include "trace.h"
 
+#include <cassert>
 #include <iostream>
 
-Trace::Trace() : instrs(std::vector<const IR *>()) {}
+#include <sys/mman.h>
+
+Trace::Trace()
+    : instrs(std::vector<const IR *>()), lastState(Trace::State::Abort),
+      mcode(nullptr), mcodeSz(0) {}
+
+Trace::~Trace() {
+  if (mcode) {
+    assert(munmap(mcode, mcodeSz) == 0);
+  }
+}
 
 Trace::State Trace::record(const IR *ir) {
   if (isComplete()) {

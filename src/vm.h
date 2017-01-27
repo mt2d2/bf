@@ -2,9 +2,12 @@
 #define VM_H
 
 #include <cstdint>
+#include <unordered_map>
 
 #include "program.h"
 #include "trace.h"
+
+class IR;
 
 class VM {
 public:
@@ -14,8 +17,11 @@ public:
 
 private:
   Program program;
-  Trace trace;
   uint8_t *tape;
+
+  Trace trace;
+  unsigned traceCount;
+  std::unordered_map<unsigned, Trace> traces;
 };
 
 #endif // VM_H

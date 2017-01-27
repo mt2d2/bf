@@ -1,5 +1,6 @@
 #include "vm.h"
 
+#include <cassert>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -8,8 +9,9 @@
 #define unlikely(x) __builtin_expect((long)(x), 0)
 
 VM::VM(Program prog)
-    : program(std::move(prog)), trace(Trace()),
-      tape(static_cast<uint8_t *>(calloc(30000, 1))) {}
+    : program(std::move(prog)), tape(static_cast<uint8_t *>(calloc(30000, 1))),
+      trace(Trace()), traceCount(0),
+      traces(std::unordered_map<unsigned, Trace>()) {}
 
 VM::~VM() { free(tape); }
 
@@ -73,6 +75,8 @@ void VM::run() {
     if (trace.isComplete()) {
       printf("trace completed\n");
       trace.debug();
+      trace.compile();
+      traces[traceCount++] = trace;
       trace = Trace();
     } else {
       // profiling mode

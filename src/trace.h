@@ -1,6 +1,7 @@
 #ifndef TRACE_H
 #define TRACE_H
 
+#include <cstdint>
 #include <vector>
 
 #include "ir.h"
@@ -14,6 +15,7 @@ public:
   };
 
   Trace();
+  ~Trace();
 
   State record(const IR *ir);
   bool isComplete() const;
@@ -26,6 +28,9 @@ private:
 
   std::vector<const IR *> instrs;
   State lastState;
+
+  void *mcode;
+  size_t mcodeSz;
 };
 
 #endif // TRACE_H
