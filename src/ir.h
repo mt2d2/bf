@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <map>
+#include <ostream>
 #include <string>
 
 enum Op {
@@ -54,5 +55,7 @@ private:
   void set(Op op, uint16_t a, int16_t b);
 };
 static_assert(sizeof(IR) == sizeof(uint64_t), "IR must be 64 bits");
+
+std::ostream &operator<<(std::ostream &os, const IR &i);
 
 #endif // IR_H
