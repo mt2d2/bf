@@ -74,6 +74,7 @@ void Trace::compile() {
       break;
     case MulSub:
       break;
+    case Jit:
     case Hlt:
       assert(false);
       break;

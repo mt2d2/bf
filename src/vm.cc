@@ -16,13 +16,14 @@ VM::VM(Program prog)
 VM::~VM() { free(tape); }
 
 void VM::run() {
-  static const void *opLbls[] = {&&IncPtr,  &&DecPtr,  &&IncByte, &&DecByte,
-                                 &&PutChar, &&GetChar, &&Label,   &&Jmp,
-                                 &&Assign,  &&MulAdd,  &&MulSub,  &&Hlt};
+  static const void *opLbls[] = {
+      &&IncPtr, &&DecPtr, &&IncByte, &&DecByte, &&PutChar, &&GetChar, &&Jit,
+      &&Label,  &&Jmp,    &&Assign,  &&MulAdd,  &&MulSub,  &&Hlt};
   static const void *traceLbls[] = {
       &&trace_IncPtr,  &&trace_DecPtr,  &&trace_IncByte, &&trace_DecByte,
-      &&trace_PutChar, &&trace_GetChar, &&trace_Label,   &&trace_Jmp,
-      &&trace_Assign,  &&trace_MulAdd,  &&trace_MulSub,  &&trace_Hlt};
+      &&trace_PutChar, &&trace_GetChar, &&trace_Jit,     &&trace_Label,
+      &&trace_Jmp,     &&trace_Assign,  &&trace_MulAdd,  &&trace_MulSub,
+      &&trace_Hlt};
 
   std::vector<IR> &instrs = program.getInstrs();
   void const **disp = opLbls;
@@ -71,6 +72,7 @@ void VM::run() {
     *(ptr + instr->getB()) = getchar();
     DISPATCH;
   }
+  OP(Jit) { assert(false); }
   OP(Label) {
     if (trace.isComplete()) {
       printf("trace completed\n");
