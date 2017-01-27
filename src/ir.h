@@ -41,7 +41,18 @@ public:
   IR(Op op, uint16_t a);
   IR(Op op, uint16_t a, int16_t b);
 
-  Op getOp() const { return (Op)(uint32_t)(v >> 32); }
+  Op getOp() const {
+    uint32_t oper = v >> 32;
+    return (Op)(uint16_t)(oper >> 16);
+  }
+  uint16_t getThresh() const {
+    uint32_t oper = v >> 32;
+    return (uint16_t)oper;
+  }
+  void incThresh() {
+    uint16_t thresh = getThresh();
+    set(getOp(), thresh + 1, getA(), getB());
+  }
   uint16_t getA() const {
     uint32_t arg = v;
     return arg >> 16;
@@ -52,7 +63,7 @@ public:
   }
 
 private:
-  void set(Op op, uint16_t a, int16_t b);
+  void set(Op op, uint16_t thresh, uint16_t a, int16_t b);
 };
 static_assert(sizeof(IR) == sizeof(uint64_t), "IR must be 64 bits");
 

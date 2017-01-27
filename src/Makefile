@@ -1,5 +1,5 @@
 EXE=bf
-OBJS=parser.o ir.o program.o vm.o main.o
+OBJS=parser.o ir.o program.o trace.o vm.o main.o
 DEPS=$(OBJS:.o=.d)
 
 CXX=clang++

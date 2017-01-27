@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include "program.h"
+#include "trace.h"
 
 class VM {
 public:
@@ -13,6 +14,7 @@ public:
 
 private:
   Program program;
+  Trace trace;
   uint8_t *tape;
 };
 
