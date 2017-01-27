@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+#include "dynasm/dasm_proto.h"
+#include "dynasm/dasm_x86.h"
+
 Trace::Trace() : instrs(std::vector<const IR *>()) {}
 
 Trace::State Trace::record(const IR *ir) {
