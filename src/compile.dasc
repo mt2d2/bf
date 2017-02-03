@@ -90,20 +90,16 @@ void Trace::compile() {
       | mov byte [PTR], ir->getA();
       break;
     case MulAdd:
-      | mov SCRATCH2b, byte [PTR]
+      | movzx SCRATCH2, byte [PTR]
       | imul SCRATCH2, ir->getA()
-
-      | mov SCRATCH1b, byte [PTR + ir->getB()]
-      | add SCRATCH1b, SCRATCH2b
-      | mov byte [PTR + ir->getB()], SCRATCH1b
+      | mov SCRATCH1, ir->getB()
+      | add byte [PTR + SCRATCH1], SCRATCH2b
       break;
     case MulSub:
-      | mov SCRATCH2b, byte [PTR]
+      | movzx SCRATCH2, byte [PTR]
       | imul SCRATCH2, ir->getA()
-
-      | mov SCRATCH1b, byte [PTR + ir->getB()]
-      | sub SCRATCH1b, SCRATCH2b
-      | mov byte [PTR + ir->getB()], SCRATCH1b
+      | mov SCRATCH1, ir->getB()
+      | sub byte [PTR + SCRATCH1], SCRATCH2b
       break;
     case Jit:
     case Hlt:
