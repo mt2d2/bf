@@ -4,8 +4,8 @@ OBJS=parser.o ir.o program.o trace.o compile.o vm.o main.o
 DEPS=$(OBJS:.o=.d)
 
 CXX=clang++
-CXXFLAGS=-std=c++11 -Wall -Werror -Ofast -march=native -g
-LDFLAGS=
+CXXFLAGS=-std=c++11 -Wall -Werror -flto -Ofast -march=native -g
+LDFLAGS=-flto
 LUA=luajit
 
 $(EXE): $(PRE) $(OBJS)

@@ -5,9 +5,13 @@
 
 #include <sys/mman.h>
 
+#include "ir.h"
+
 Trace::Trace()
     : instrs(std::vector<const IR *>()), lastState(Trace::State::Abort),
-      mcode(nullptr), mcodeSz(0) {}
+      mcode(nullptr), mcodeSz(0) {
+  instrs.reserve(5);
+}
 
 Trace::~Trace() {
   if (mcode) {
@@ -15,8 +19,22 @@ Trace::~Trace() {
   }
 }
 
+Trace::Trace(Trace &&o) noexcept : mcode(std::move(o.mcode)),
+                                   mcodeSz(std::move(o.mcodeSz)) {
+  o.mcode = nullptr;
+}
+
+Trace &Trace::operator=(Trace &&o) {
+  instrs = o.instrs;
+  lastState = o.lastState;
+  mcode = o.mcode;
+  mcodeSz = o.mcodeSz;
+  return *this;
+}
+
 Trace::State Trace::record(const IR *ir) {
-  if (isComplete()) {
+  if (ir->getOp() == Op::Jit) {
+    lastState = Trace::State::Abort;
     goto done;
   } else if (isLoopHead(ir)) {
     lastState = Trace::State::Complete;
@@ -34,8 +52,6 @@ Trace::State Trace::record(const IR *ir) {
 done:
   return lastState;
 }
-
-bool Trace::isComplete() const { return lastState == Trace::State::Complete; }
 
 void Trace::debug() const {
   for (const auto *ir : instrs) {

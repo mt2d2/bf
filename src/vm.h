@@ -2,7 +2,7 @@
 #define VM_H
 
 #include <cstdint>
-#include <unordered_map>
+#include <vector>
 
 #include "program.h"
 #include "trace.h"
@@ -20,8 +20,7 @@ private:
   uint8_t *tape;
 
   Trace trace;
-  unsigned traceCount;
-  std::unordered_map<unsigned, Trace> traces;
+  std::vector<Trace> traces;
 };
 
 #endif // VM_H

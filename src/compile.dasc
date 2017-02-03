@@ -12,6 +12,12 @@
 #include "dynasm/dasm_proto.h"
 #include "dynasm/dasm_x86.h"
 
+#include "ir.h"
+
+void test(int pc) {
+
+}
+
 |.arch x64
 
 void Trace::compile() {
@@ -31,8 +37,12 @@ void Trace::compile() {
   |.actionlist bf_actions
   dasm_setup(&d, bf_actions);
 
-  |.define PTR, rbx
-  |.define PUTCHAR, rbp
+  |.define PTR, r12
+  |.define PUTCHAR, r13
+  |.define SCRATCH1, r14
+    |.define SCRATCH1b, r14b
+  |.define SCRATCH2, r15
+    |.define SCRATCH2b, r15b
 
   dasm_State** Dst = &d;
   |.code
@@ -40,9 +50,14 @@ void Trace::compile() {
 
   | push PTR
   | push PUTCHAR
+  | push SCRATCH1
+  | push SCRATCH2
   | mov PTR, rdi
-  | mov PUTCHAR, putchar
 
+  // https://www.corsix.org/content/calling-external-functions-x64-dynasm
+  | mov64 PUTCHAR, (uint64_t)(intptr_t)&putchar
+
+  |->loop:
   for (const auto *ir : instrs) {
     switch (ir->getOp()) {
     case IncPtr:
@@ -52,27 +67,43 @@ void Trace::compile() {
       | sub PTR, ir->getA();
       break;
     case IncByte:
-      | add byte [PTR + ir->getB()], ir->getA();
+      | add byte [PTR + ir->getB()], ir->getA()
       break;
     case DecByte:
-      | sub byte [PTR + ir->getB()], ir->getA();
+      | sub byte [PTR + ir->getB()], ir->getA()
       break;
     case PutChar:
-      | movzx rdi, byte [PTR]
+      | movzx rdi, byte [PTR + ir->getB()]
       | call PUTCHAR
       break;
     case GetChar:
+      assert(false);
       break;
     case Label:
+      | cmp byte [PTR], 0
+      | jz ->cleanup
       break;
     case Jmp:
+      | jmp ->loop
       break;
     case Assign:
       | mov byte [PTR], ir->getA();
       break;
     case MulAdd:
+      | mov SCRATCH2b, byte [PTR]
+      | imul SCRATCH2, ir->getA()
+
+      | mov SCRATCH1b, byte [PTR + ir->getB()]
+      | add SCRATCH1b, SCRATCH2b
+      | mov byte [PTR + ir->getB()], SCRATCH1b
       break;
     case MulSub:
+      | mov SCRATCH2b, byte [PTR]
+      | imul SCRATCH2, ir->getA()
+
+      | mov SCRATCH1b, byte [PTR + ir->getB()]
+      | sub SCRATCH1b, SCRATCH2b
+      | mov byte [PTR + ir->getB()], SCRATCH1b
       break;
     case Jit:
     case Hlt:
@@ -81,8 +112,12 @@ void Trace::compile() {
     }
   }
 
+  |->cleanup:
+
   | mov rax, PTR
 
+  | pop SCRATCH2
+  | pop SCRATCH1
   | pop PUTCHAR
   | pop PTR
 
@@ -90,7 +125,6 @@ void Trace::compile() {
 
   dasm_link(&d, &mcodeSz);
 
-  // todo, need to mmap and mprotect
   mcode =  mmap(0, mcodeSz, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   dasm_encode(&d, mcode);
   mprotect(mcode, mcodeSz, PROT_READ | PROT_EXEC);

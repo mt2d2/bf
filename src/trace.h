@@ -4,7 +4,9 @@
 #include <cstdint>
 #include <vector>
 
-#include "ir.h"
+class IR;
+
+typedef uint8_t *(*nativeTrace)(uint8_t *);
 
 class Trace {
 public:
@@ -16,11 +18,14 @@ public:
 
   Trace();
   ~Trace();
+  Trace(Trace &&o) noexcept;
+  Trace &operator=(Trace &&o);
 
   State record(const IR *ir);
-  bool isComplete() const;
+  bool isComplete() const { return lastState == Trace::State::Complete; }
   void debug() const;
   void compile();
+  nativeTrace getMcode() const { return reinterpret_cast<nativeTrace>(mcode); }
 
 private:
   bool isLoopHead(const IR *ir) const;

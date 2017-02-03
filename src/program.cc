@@ -25,7 +25,7 @@ void Program::debug() const {
       std::cout << "  ";
     std::cout << i << std::endl;
 
-    if (i.getOp() == Op::Label)
+    if (i.getOp() == Op::Label || i.getOp() == Op::Jit)
       ++indent;
     else if (i.getOp() == Op::Jmp)
       --indent;

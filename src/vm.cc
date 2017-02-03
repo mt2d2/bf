@@ -10,8 +10,7 @@
 
 VM::VM(Program prog)
     : program(std::move(prog)), tape(static_cast<uint8_t *>(calloc(30000, 1))),
-      trace(Trace()), traceCount(0),
-      traces(std::unordered_map<unsigned, Trace>()) {}
+      trace(Trace()), traces(std::vector<Trace>()) {}
 
 VM::~VM() { free(tape); }
 
@@ -35,7 +34,7 @@ void VM::run() {
   trace_##x : {                                                                \
     const auto state = trace.record(instr);                                    \
     if (state != Trace::State::Tracing) {                                      \
-      if (state == Trace::State::Abort)                                        \
+      if (false && state == Trace::State::Abort)                               \
         printf("trace aborted\n");                                             \
       disp = opLbls;                                                           \
     }                                                                          \
@@ -72,14 +71,21 @@ void VM::run() {
     *(ptr + instr->getB()) = getchar();
     DISPATCH;
   }
-  OP(Jit) { assert(false); }
+  OP(Jit) {
+    nativeTrace mcode = traces.at(instr->getB()).getMcode();
+    uint8_t *newTape = mcode(ptr);
+    ptr = newTape;
+    pc = instr->getA();
+  }
   OP(Label) {
     if (trace.isComplete()) {
-      printf("trace completed\n");
-      trace.debug();
+      // printf("trace completed\n");
+      // trace.debug();
       trace.compile();
-      traces[traceCount++] = trace;
+      traces.push_back(std::move(trace));
+      *instr = IR(Op::Jit, instr->getA(), traces.size() - 1);
       trace = Trace();
+      disp = opLbls;
     } else {
       // profiling mode
       if (instr->getThresh() == 100) {
