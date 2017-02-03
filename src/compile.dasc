@@ -14,11 +14,15 @@
 
 #include "ir.h"
 
-void test(int pc) {
-
-}
-
 |.arch x64
+
+static bool didSetFlags(const IR* ir) {
+  const auto op = ir->getOp();
+  return op == DecByte ||
+         op == IncByte ||
+         op == MulAdd ||
+         op == MulSub;
+}
 
 void Trace::compile() {
   // Compilation using DynASM is very much inspired by the follow tutorial:
@@ -80,7 +84,9 @@ void Trace::compile() {
       assert(false);
       break;
     case Label:
-      | cmp byte [PTR], 0
+      if (!didSetFlags(ir)) {
+        | cmp byte [PTR], 0
+      }
       | jz ->cleanup
       break;
     case Jmp:

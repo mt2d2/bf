@@ -67,3 +67,8 @@ void Trace::invalidate() {
   lastState = Trace::State::Abort;
   instrs.clear();
 }
+
+const IR *Trace::lastIR() const {
+  assert(instrs.size() > 0);
+  return instrs.at(instrs.size() - 1);
+}

@@ -30,6 +30,7 @@ public:
 private:
   bool isLoopHead(const IR *ir) const;
   void invalidate();
+  const IR *lastIR() const;
 
   std::vector<const IR *> instrs;
   State lastState;
