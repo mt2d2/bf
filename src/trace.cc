@@ -25,10 +25,10 @@ Trace::Trace(Trace &&o) noexcept : mcode(std::move(o.mcode)),
 }
 
 Trace &Trace::operator=(Trace &&o) {
-  instrs = o.instrs;
-  lastState = o.lastState;
-  mcode = o.mcode;
-  mcodeSz = o.mcodeSz;
+  instrs = std::move(o.instrs);
+  lastState = std::move(o.lastState);
+  mcode = std::move(o.mcode);
+  mcodeSz = std::move(o.mcodeSz);
   return *this;
 }
 
