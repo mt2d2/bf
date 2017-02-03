@@ -44,7 +44,6 @@ void Trace::compile() {
   |.define PTR, r12
   |.define PUTCHAR, r13
   |.define SCRATCH1, r14
-    |.define SCRATCH1b, r14b
   |.define SCRATCH2, r15
     |.define SCRATCH2b, r15b
 
