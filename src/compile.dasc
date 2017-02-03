@@ -127,7 +127,7 @@ void Trace::compile() {
 
   dasm_link(&d, &mcodeSz);
 
-  mcode =  mmap(0, mcodeSz, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  mcode = mmap(0, mcodeSz, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   dasm_encode(&d, mcode);
   mprotect(mcode, mcodeSz, PROT_READ | PROT_EXEC);
 
