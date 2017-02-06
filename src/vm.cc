@@ -1,6 +1,5 @@
 #include "vm.h"
 
-#include <cassert>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
