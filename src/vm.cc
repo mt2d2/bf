@@ -89,7 +89,7 @@ void VM::run() {
       disp = opLbls;
     } else {
       // profiling mode
-      if (instr->getThresh() == 100) {
+      if (instr->getThresh() == 1000) {
         instr->incThresh();
         trace.record(instr); // record loop header
         disp = traceLbls;
