@@ -116,8 +116,8 @@ void Trace::compile(const std::vector<Trace>& traces) {
       | mov PTR, rax
       break;
     case Hlt:
-        assert(false);
-        break;
+      assert(false);
+      break;
     }
   }
 
