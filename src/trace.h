@@ -24,7 +24,7 @@ public:
   State record(const IR *ir);
   bool isComplete() const { return lastState == Trace::State::Complete; }
   void debug() const;
-  void compile();
+  void compile(const std::vector<Trace> &traces);
   nativeTrace getMcode() const { return reinterpret_cast<nativeTrace>(mcode); }
 
 private:

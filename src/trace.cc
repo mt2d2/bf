@@ -19,8 +19,8 @@ Trace::~Trace() {
   }
 }
 
-Trace::Trace(Trace &&o) noexcept : mcode(std::move(o.mcode)),
-                                   mcodeSz(std::move(o.mcodeSz)) {
+Trace::Trace(Trace &&o) noexcept
+    : mcode(std::move(o.mcode)), mcodeSz(std::move(o.mcodeSz)) {
   o.mcode = nullptr;
 }
 
@@ -33,10 +33,7 @@ Trace &Trace::operator=(Trace &&o) {
 }
 
 Trace::State Trace::record(const IR *ir) {
-  if (ir->getOp() == Op::Jit) {
-    lastState = Trace::State::Abort;
-    goto done;
-  } else if (isLoopHead(ir)) {
+  if (isLoopHead(ir)) {
     lastState = Trace::State::Complete;
     goto done;
   } else if (ir->getOp() == Op::Label && instrs.size() > 0) {

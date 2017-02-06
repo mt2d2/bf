@@ -76,12 +76,13 @@ void VM::run() {
     uint8_t *newTape = mcode(ptr);
     ptr = newTape;
     pc = instr->getA();
+    DISPATCH;
   }
   OP(Label) {
     if (trace.isComplete()) {
       // printf("trace completed\n");
       // trace.debug();
-      trace.compile();
+      trace.compile(traces);
       traces.push_back(std::move(trace));
       *instr = IR(Op::Jit, instr->getA(), traces.size() - 1);
       trace = Trace();

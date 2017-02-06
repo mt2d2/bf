@@ -24,7 +24,7 @@ static bool didSetFlags(const IR* ir) {
          op == MulSub;
 }
 
-void Trace::compile() {
+void Trace::compile(const std::vector<Trace>& traces) {
   // Compilation using DynASM is very much inspired by the follow tutorial:
   // https://corsix.github.io/dynasm-doc/tutorial.html
   // Many thanks to Peter Cawley for documentation and to Mike Pall for DynASM.
@@ -107,9 +107,14 @@ void Trace::compile() {
       | sub byte [PTR + SCRATCH1], SCRATCH2b
       break;
     case Jit:
-    case Hlt:
-      assert(false);
+      | mov64 SCRATCH1, (uint64_t)(intptr_t)traces.at(ir->getB()).getMcode();
+      | mov rdi, PTR
+      | call SCRATCH1
+      | mov PTR, rax
       break;
+    case Hlt:
+        assert(false);
+        break;
     }
   }
 
