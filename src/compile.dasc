@@ -53,8 +53,7 @@ void Trace::compile(const std::vector<Trace>& traces) {
 
   |.define PTR, r12
   |.define SCRATCH1, r8
-  |.define SCRATCH2, r9
-    |.define SCRATCH2b, r9b
+    |.define SCRATCH1b, r8b
 
   dasm_State** Dst = &d;
   |.code
@@ -98,16 +97,14 @@ void Trace::compile(const std::vector<Trace>& traces) {
       | mov byte [PTR], ir->getA();
       break;
     case MulAdd:
-      | movzx SCRATCH2, byte [PTR]
-      | imul SCRATCH2, ir->getA()
-      | mov SCRATCH1, ir->getB()
-      | add byte [PTR + SCRATCH1], SCRATCH2b
+      | movzx SCRATCH1, byte [PTR]
+      | imul SCRATCH1, ir->getA()
+      | add byte [PTR + ir->getB()], SCRATCH1b
       break;
     case MulSub:
-      | movzx SCRATCH2, byte [PTR]
-      | imul SCRATCH2, ir->getA()
-      | mov SCRATCH1, ir->getB()
-      | sub byte [PTR + SCRATCH1], SCRATCH2b
+      | movzx SCRATCH1, byte [PTR]
+      | imul SCRATCH1, ir->getA()
+      | sub byte [PTR + ir->getB()], SCRATCH1b
       break;
     case Jit:
       | mov64 SCRATCH1, (uint64_t)(intptr_t)traces.at(ir->getB()).getMcode();
