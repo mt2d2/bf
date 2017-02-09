@@ -131,7 +131,7 @@ void Program::foldMultiply() {
 
     ++it; // consume [
     while (it->getOp() != Op::Jmp && it != instrs.end()) {
-      static Op ill[] = {Op::Label, Op::PutChar, Op::GetChar};
+      static const Op ill[] = {Op::Label, Op::PutChar, Op::GetChar};
       const auto ills =
           std::any_of(std::begin(ill), std::end(ill),
                       [&](const Op op) { return it->getOp() == op; });
