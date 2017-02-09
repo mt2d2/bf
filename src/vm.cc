@@ -78,7 +78,7 @@ void VM::run() {
     DISPATCH;
   }
   OP(Label) {
-    if (trace.isComplete()) {
+    if (unlikely(trace.isComplete())) {
       // printf("trace completed\n");
       // trace.debug();
       trace.compile(traces);
@@ -88,7 +88,7 @@ void VM::run() {
       disp = opLbls;
     } else {
       // profiling mode
-      if (instr->getThresh() == 1000) {
+      if (unlikely(instr->getThresh() == 1000)) {
         instr->incThresh();
         trace.record(instr); // record loop header
         disp = traceLbls;
