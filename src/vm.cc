@@ -71,7 +71,7 @@ void VM::run() {
     DISPATCH;
   }
   OP(Jit) {
-    nativeTrace mcode = traces.at(instr->getB()).getMcode();
+    nativeTrace mcode = traces[instr->getB()].getMcode();
     uint8_t *newTape = mcode(ptr);
     ptr = newTape;
     pc = instr->getA();
