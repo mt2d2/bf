@@ -38,7 +38,6 @@ Trace::State Trace::record(const IR *ir) {
     goto done;
   } else if (ir->getOp() == Op::Label && instrs.size() > 0) {
     // inner loop detected, abort
-    lastState = Trace::State::Abort;
     invalidate();
     goto done;
   }
