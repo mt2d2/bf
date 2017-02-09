@@ -14,7 +14,9 @@ void IR::set(Op op, uint16_t thresh, uint16_t a, int16_t b) {
   v = ((uint64_t)oper << 32) | arg;
 }
 
+#ifndef NDEBUG
 std::ostream &operator<<(std::ostream &os, const IR &i) {
   os << Op2Str.at(i.getOp()) << " [" << i.getA() << ", " << i.getB() << "] ";
   return os;
 }
+#endif

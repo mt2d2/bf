@@ -49,11 +49,13 @@ done:
   return lastState;
 }
 
+#ifndef NDEBUG
 void Trace::debug() const {
   for (const auto *ir : instrs) {
     std::cout << *ir << std::endl;
   }
 }
+#endif
 
 bool Trace::isLoopHead(const IR *ir) const {
   return instrs.size() > 0 && ir == instrs[0];

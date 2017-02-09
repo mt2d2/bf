@@ -18,6 +18,7 @@ Program::Program(std::vector<IR> in) : instrs(std::move(in)) {
 
 std::vector<IR> &Program::getInstrs() { return instrs; }
 
+#ifndef NDEBUG
 void Program::debug() const {
   unsigned indent = 0;
   for (const auto i : instrs) {
@@ -31,6 +32,7 @@ void Program::debug() const {
       --indent;
   }
 }
+#endif
 
 void Program::findLoops() {
   // this algorithm was adopted from https://github.com/gensym-vla/PyBrainFuck
