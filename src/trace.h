@@ -10,6 +10,8 @@ typedef uint8_t *(*nativeTrace)(uint8_t *);
 
 class Trace {
 public:
+  static const int16_t LoopThreshold = 1000;
+
   enum State {
     Abort,
     Tracing,

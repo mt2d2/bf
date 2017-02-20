@@ -88,7 +88,7 @@ void VM::run() {
       disp = opLbls;
     } else {
       // profiling mode
-      if (unlikely(instr->getThresh() == 1000)) {
+      if (unlikely(instr->getThresh() == Trace::LoopThreshold)) {
         instr->incThresh();
         trace.record(instr); // record loop header
         disp = traceLbls;
