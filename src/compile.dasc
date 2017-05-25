@@ -82,7 +82,8 @@ void Trace::compile(const std::vector<Trace>& traces) {
       | call_extern putchar
       break;
     case GetChar:
-      assert(false);
+      | call_extern getchar
+      | mov [PTR + ir->getB()], eax
       break;
     case Label:
       if (!didSetFlags(ir)) {

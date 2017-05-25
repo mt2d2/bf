@@ -10,6 +10,8 @@ typedef uint8_t *(*nativeTrace)(uint8_t *);
 
 class Trace {
 public:
+  static const int16_t LoopThreshold = 1000;
+
   enum State {
     Abort,
     Tracing,
@@ -23,9 +25,11 @@ public:
 
   State record(const IR *ir);
   bool isComplete() const { return lastState == Trace::State::Complete; }
-  void debug() const;
   void compile(const std::vector<Trace> &traces);
   nativeTrace getMcode() const { return reinterpret_cast<nativeTrace>(mcode); }
+#ifndef NDEBUG
+  void debug() const;
+#endif
 
 private:
   bool isLoopHead(const IR *ir) const;

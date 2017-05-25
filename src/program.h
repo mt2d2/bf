@@ -10,7 +10,9 @@ class Program {
 public:
   explicit Program(std::vector<IR> in);
   std::vector<IR> &getInstrs();
+#ifndef NDEBUG
   void debug() const;
+#endif
 
 private:
   void findLoops();

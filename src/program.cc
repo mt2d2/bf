@@ -18,6 +18,7 @@ Program::Program(std::vector<IR> in) : instrs(std::move(in)) {
 
 std::vector<IR> &Program::getInstrs() { return instrs; }
 
+#ifndef NDEBUG
 void Program::debug() const {
   unsigned indent = 0;
   for (const auto i : instrs) {
@@ -31,6 +32,7 @@ void Program::debug() const {
       --indent;
   }
 }
+#endif
 
 void Program::findLoops() {
   // this algorithm was adopted from https://github.com/gensym-vla/PyBrainFuck
@@ -131,7 +133,7 @@ void Program::foldMultiply() {
 
     ++it; // consume [
     while (it->getOp() != Op::Jmp && it != instrs.end()) {
-      static Op ill[] = {Op::Label, Op::PutChar, Op::GetChar};
+      static const Op ill[] = {Op::Label, Op::PutChar, Op::GetChar};
       const auto ills =
           std::any_of(std::begin(ill), std::end(ill),
                       [&](const Op op) { return it->getOp() == op; });

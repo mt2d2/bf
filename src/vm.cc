@@ -23,12 +23,6 @@ void VM::run() {
       &&trace_Jmp,     &&trace_Assign,  &&trace_MulAdd,  &&trace_MulSub,
       &&trace_Hlt};
 
-  std::vector<IR> &instrs = program.getInstrs();
-  void const **disp = opLbls;
-  uint8_t *ptr = tape;
-  size_t pc = 0;
-  IR *instr = &instrs[pc];
-
 #define OP(x)                                                                  \
   trace_##x : {                                                                \
     const auto state = trace.record(instr);                                    \
@@ -43,6 +37,12 @@ void VM::run() {
 #define DISPATCH                                                               \
   instr = &instrs[pc++];                                                       \
   goto *disp[instr->getOp()];
+
+  std::vector<IR> &instrs = program.getInstrs();
+  void const **disp = opLbls;
+  uint8_t *ptr = tape;
+  size_t pc = 0;
+  IR *instr;
 
   DISPATCH;
 
@@ -78,7 +78,7 @@ void VM::run() {
     DISPATCH;
   }
   OP(Label) {
-    if (trace.isComplete()) {
+    if (unlikely(trace.isComplete())) {
       // printf("trace completed\n");
       // trace.debug();
       trace.compile(traces);
@@ -88,7 +88,7 @@ void VM::run() {
       disp = opLbls;
     } else {
       // profiling mode
-      if (instr->getThresh() == 1000) {
+      if (unlikely(instr->getThresh() == Trace::LoopThreshold)) {
         instr->incThresh();
         trace.record(instr); // record loop header
         disp = traceLbls;

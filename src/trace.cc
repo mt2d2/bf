@@ -38,7 +38,6 @@ Trace::State Trace::record(const IR *ir) {
     goto done;
   } else if (ir->getOp() == Op::Label && instrs.size() > 0) {
     // inner loop detected, abort
-    lastState = Trace::State::Abort;
     invalidate();
     goto done;
   }
@@ -50,11 +49,13 @@ done:
   return lastState;
 }
 
+#ifndef NDEBUG
 void Trace::debug() const {
   for (const auto *ir : instrs) {
     std::cout << *ir << std::endl;
   }
 }
+#endif
 
 bool Trace::isLoopHead(const IR *ir) const {
   return instrs.size() > 0 && ir == instrs[0];

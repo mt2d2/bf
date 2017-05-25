@@ -23,6 +23,7 @@ enum Op {
 };
 static_assert(Op::Hlt <= (1uLL << 32), "32 bits opcode overflow");
 
+#ifndef NDEBUG
 static const std::map<Op, std::string> Op2Str = {
     {Op::IncPtr, "IncPtr"},   {Op::DecPtr, "DecPtr"},
     {Op::IncByte, "IncByte"}, {Op::DecByte, "DecByte"},
@@ -31,6 +32,7 @@ static const std::map<Op, std::string> Op2Str = {
     {Op::Jmp, "Jmp"},         {Op::Assign, "Assign"},
     {Op::MulAdd, "MulAdd"},   {Op::MulSub, "MulSub"},
     {Op::Hlt, "Hlt"}};
+#endif
 
 class IR {
 public:
@@ -69,6 +71,8 @@ private:
 };
 static_assert(sizeof(IR) == sizeof(uint64_t), "IR must be 64 bits");
 
+#ifndef NDEBUG
 std::ostream &operator<<(std::ostream &os, const IR &i);
+#endif
 
 #endif // IR_H
