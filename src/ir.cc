@@ -1,7 +1,5 @@
 #include "ir.h"
 
-#include <cassert>
-
 IR::IR(Op op) : v(0) { set(op, 0, 1, 0); }
 
 IR::IR(Op op, uint16_t a) : v(0) { set(op, 0, a, 0); }
