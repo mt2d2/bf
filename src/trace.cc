@@ -8,8 +8,7 @@
 #include "ir.h"
 
 Trace::Trace()
-    : instrs(std::vector<const IR *>()), lastState(Trace::State::Abort),
-      mcode(nullptr), mcodeSz(0) {
+    : instrs(), lastState(Trace::State::Abort), mcode(nullptr), mcodeSz(0) {
   instrs.reserve(5);
 }
 

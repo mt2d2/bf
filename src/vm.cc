@@ -9,7 +9,7 @@
 
 VM::VM(Program prog)
     : program(std::move(prog)), tape(static_cast<uint8_t *>(calloc(30000, 1))),
-      trace(Trace()), traces(std::vector<Trace>()) {}
+      trace(), traces() {}
 
 VM::~VM() { free(tape); }
 
