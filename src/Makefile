@@ -1,18 +1,29 @@
 EXE=bf
-PRE=compile.cc
-OBJS=parser.o ir.o program.o trace.o compile.o vm.o main.o
+OBJS=parser.o ir.o program.o vm.o main.o
 DEPS=$(OBJS:.o=.d)
 
+CC=clang
 CXX=clang++
 CXXFLAGS=-std=c++11 -Wall -Werror -flto -Ofast -march=native -g
 LDFLAGS=-flto
 LUA=luajit
 
-$(EXE): $(PRE) $(OBJS)
+TESTARCH=$(shell $(CC) -E arch.h -dM)
+ifneq (,$(findstring BF_JIT_X64,$(TESTARCH)))
+  BF_JIT_ARCH=x64
+endif
+
+ifdef BF_JIT_ARCH
+	CXXFLAGS+=-DJIT
+	PRE=compile_$(BF_JIT_ARCH).cc
+	OBJS+=trace.o compile_$(BF_JIT_ARCH).o
+endif
+
+$(EXE): $(OBJS)
 	$(CXX) $(LDFLAGS) $(OBJS) -o $@
 
 %.cc: %.dasc
-		$(LUA) dynasm/dynasm.lua -o $@ -D X64 $<
+		$(LUA) dynasm/dynasm.lua -o $@ $<
 
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) -MMD -c $< -o $@

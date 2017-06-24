@@ -8,12 +8,18 @@
 #define unlikely(x) __builtin_expect((long)(x), 0)
 
 VM::VM(Program prog)
-    : program(std::move(prog)), tape(static_cast<uint8_t *>(calloc(30000, 1))),
-      trace(), traces() {}
+    : program(std::move(prog)), tape(static_cast<uint8_t *>(calloc(30000, 1)))
+#ifdef JIT
+      ,
+      trace(), traces()
+#endif
+{
+}
 
 VM::~VM() { free(tape); }
 
 void VM::run() {
+#ifdef JIT
   static const void *opLbls[] = {
       &&IncPtr, &&DecPtr, &&IncByte, &&DecByte, &&PutChar, &&GetChar, &&Jit,
       &&Label,  &&Jmp,    &&Assign,  &&MulAdd,  &&MulSub,  &&Hlt};
@@ -33,6 +39,13 @@ void VM::run() {
     }                                                                          \
   }                                                                            \
   x:
+#else
+  static const void *opLbls[] = {&&IncPtr,  &&DecPtr,  &&IncByte, &&DecByte,
+                                 &&PutChar, &&GetChar, &&Label,   &&Jmp,
+                                 &&Assign,  &&MulAdd,  &&MulSub,  &&Hlt};
+#define OP(x)                                                                  \
+  x:
+#endif
 
 #define DISPATCH                                                               \
   instr = &instrs[pc++];                                                       \
@@ -70,6 +83,7 @@ void VM::run() {
     *(ptr + instr->getB()) = getchar();
     DISPATCH;
   }
+#ifdef JIT
   OP(Jit) {
     nativeTrace mcode = traces[instr->getB()].getMcode();
     uint8_t *newTape = mcode(ptr);
@@ -77,7 +91,9 @@ void VM::run() {
     pc = instr->getA();
     DISPATCH;
   }
+#endif
   OP(Label) {
+#ifdef JIT
     if (unlikely(trace.isComplete())) {
       // printf("trace completed\n");
       // trace.debug();
@@ -96,6 +112,7 @@ void VM::run() {
         instr->incThresh();
       }
     }
+#endif
 
     if (unlikely(!*ptr)) {
       pc = instr->getA();

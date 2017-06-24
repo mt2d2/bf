@@ -16,7 +16,9 @@ enum Op {
   DecByte,
   PutChar,
   GetChar,
+#ifdef JIT
   Jit,
+#endif
   Label,
   Jmp,
   Assign,
@@ -31,10 +33,12 @@ static const std::map<Op, std::string> Op2Str = {
     {Op::IncPtr, "IncPtr"},   {Op::DecPtr, "DecPtr"},
     {Op::IncByte, "IncByte"}, {Op::DecByte, "DecByte"},
     {Op::PutChar, "PutChar"}, {Op::GetChar, "GetChar"},
-    {Op::Jit, "Jit"},         {Op::Label, "Label"},
-    {Op::Jmp, "Jmp"},         {Op::Assign, "Assign"},
-    {Op::MulAdd, "MulAdd"},   {Op::MulSub, "MulSub"},
-    {Op::Hlt, "Hlt"}};
+#ifdef JIT
+    {Op::Jit, "Jit"},
+#endif
+    {Op::Label, "Label"},     {Op::Jmp, "Jmp"},
+    {Op::Assign, "Assign"},   {Op::MulAdd, "MulAdd"},
+    {Op::MulSub, "MulSub"},   {Op::Hlt, "Hlt"}};
 #endif
 
 class IR {
