@@ -3,8 +3,11 @@
 
 #include <cstdint>
 #include <map>
+
+#ifndef NDEBUG
 #include <ostream>
 #include <string>
+#endif
 
 enum Op {
   IncPtr,
