@@ -42,6 +42,7 @@ void Trace::compile(const std::vector<Trace>& traces) {
   |.define SCRATCH2, r6
   |.define SCRATCH3, r7
 
+  | bkpt #0
   | push {PTR, SCRATCH1, SCRATCH2, SCRATCH3, lr}
 
   | mov PTR, r0
