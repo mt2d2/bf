@@ -11,7 +11,7 @@
 Program::Program(std::vector<IR> in) : instrs(std::move(in)) {
   foldRepeated();
   foldMovement();
-  // foldMultiply();
+  foldMultiply();
   foldAssign();
   findLoops();
 }
