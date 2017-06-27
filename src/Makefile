@@ -12,6 +12,9 @@ TESTARCH=$(shell $(CC) -E arch.h -dM)
 ifneq (,$(findstring BF_JIT_X64,$(TESTARCH)))
   BF_JIT_ARCH=x64
 endif
+ifneq (,$(findstring BF_JIT_ARM,$(TESTARCH)))
+  BF_JIT_ARCH=arm
+endif
 
 ifdef BF_JIT_ARCH
 	CXXFLAGS+=-DJIT

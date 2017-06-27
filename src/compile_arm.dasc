@@ -1,0 +1,137 @@
+#include "trace.h"
+
+#include <cassert>
+#include <cstdint>
+#include <cstdlib>
+
+#include <sys/mman.h>
+#if !defined(MAP_ANONYMOUS) && defined(MAP_ANON)
+#define MAP_ANONYMOUS MAP_ANON
+#endif
+
+#include "dynasm/dasm_proto.h"
+#include "dynasm/dasm_x86.h"
+
+#include "ir.h"
+
+|.arch x64
+
+static bool didSetFlags(const IR* ir) {
+  const auto op = ir->getOp();
+  return op == DecByte ||
+         op == IncByte ||
+         op == MulAdd ||
+         op == MulSub;
+}
+
+void Trace::compile(const std::vector<Trace>& traces) {
+  // Compilation using DynASM is very much inspired by the follow tutorial:
+  // https://corsix.github.io/dynasm-doc/tutorial.html
+  // Many thanks to Peter Cawley for documentation and to Mike Pall for DynASM.
+  // Please refer to LICENSE for details.
+  dasm_State *d;
+
+  // https://www.corsix.org/content/calling-external-functions-x64-dynasm
+  |.section code, imports
+  |.macro call_extern, target
+  |  .imports
+  |  ->__imp__..target:
+  |  .dword  (uint32_t)(intptr_t)target
+  |  .dword ((uint64_t)target >> 32)
+  |  .code
+  |  call qword [->__imp__..target]
+  |.endmacro
+
+  dasm_init(&d, DASM_MAXSECTION);
+
+  |.globals lbl_
+  void* labels[lbl__MAX];
+  dasm_setupglobal(&d, labels, lbl__MAX);
+
+  |.actionlist bf_actions
+  dasm_setup(&d, bf_actions);
+
+  |.define PTR, r12
+  |.define SCRATCH1, r8
+    |.define SCRATCH1b, r8b
+
+  dasm_State** Dst = &d;
+  |.code
+  |->bf_trace:
+
+  | push PTR
+  | mov PTR, rdi
+
+  |->loop:
+  for (const auto *ir : instrs) {
+    switch (ir->getOp()) {
+    case IncPtr:
+      | add PTR, ir->getA();
+      break;
+    case DecPtr:
+      | sub PTR, ir->getA();
+      break;
+    case IncByte:
+      | add byte [PTR + ir->getB()], ir->getA()
+      break;
+    case DecByte:
+      | sub byte [PTR + ir->getB()], ir->getA()
+      break;
+    case PutChar:
+      | movzx rdi, byte [PTR + ir->getB()]
+      | call_extern putchar
+      break;
+    case GetChar:
+      | call_extern getchar
+      | mov [PTR + ir->getB()], eax
+      break;
+    case Label:
+      if (!didSetFlags(ir)) {
+        | cmp byte [PTR], 0
+      }
+      | jz ->cleanup
+      break;
+    case Jmp:
+      | jmp ->loop
+      break;
+    case Assign:
+      | mov byte [PTR], ir->getA();
+      break;
+    case MulAdd:
+      | movzx SCRATCH1, byte [PTR]
+      | imul SCRATCH1, ir->getA()
+      | add byte [PTR + ir->getB()], SCRATCH1b
+      break;
+    case MulSub:
+      | movzx SCRATCH1, byte [PTR]
+      | imul SCRATCH1, ir->getA()
+      | sub byte [PTR + ir->getB()], SCRATCH1b
+      break;
+    case Jit:
+      | mov64 SCRATCH1, (uint64_t)(intptr_t)traces.at(ir->getB()).getMcode();
+      | mov rdi, PTR
+      | call SCRATCH1
+      | mov PTR, rax
+      break;
+    case Hlt:
+      assert(false);
+      break;
+    }
+  }
+
+  |->cleanup:
+  | mov rax, PTR
+  | pop PTR
+  | ret
+
+  dasm_link(&d, &mcodeSz);
+
+  mcode = mmap(0, mcodeSz, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  dasm_encode(&d, mcode);
+  mprotect(mcode, mcodeSz, PROT_READ | PROT_EXEC);
+
+  dasm_free(&d);
+
+  // free IR to save memory
+  std::vector<const IR *>().swap(instrs);
+}
