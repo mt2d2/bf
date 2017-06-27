@@ -103,6 +103,7 @@ void Trace::compile(const std::vector<Trace>& traces) {
 
   |->cleanup:
 
+  | mov r0, PTR
   | pop {r4, r5, pc}
 
   dasm_link(&d, &mcodeSz);
