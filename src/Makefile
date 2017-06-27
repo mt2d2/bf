@@ -4,7 +4,7 @@ DEPS=$(OBJS:.o=.d)
 
 CC=gcc
 CXX=g++
-CXXFLAGS=-std=c++11 -Wall -Werror -O0 -g
+CXXFLAGS=-std=c++11 -Wall -Werror -Os -g
 LDFLAGS=
 LUA=luajit
 
