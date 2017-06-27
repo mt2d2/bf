@@ -84,7 +84,7 @@ void Trace::compile(const std::vector<Trace>& traces) {
       | mov SCRATCH1, #ir->getA()
       | strb SCRATCH1, [PTR]
       break;
-    case MulAdd:      
+    case MulAdd:
       | ldrb SCRATCH1, [PTR]
       | ldrb SCRATCH2, [PTR, #ir->getB()]
 
@@ -107,7 +107,6 @@ void Trace::compile(const std::vector<Trace>& traces) {
       | strb SCRATCH1, [PTR, #ir->getB()]
       break;
     case Jit: {
-    assert(false);
       | movw SCRATCH1, #(uint32_t)(intptr_t)traces.at(ir->getB()).getMcode()
       | movt SCRATCH1, #(uint32_t)(intptr_t)traces.at(ir->getB()).getMcode() << 16
       | mov r0, PTR
