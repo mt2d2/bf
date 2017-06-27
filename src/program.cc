@@ -9,8 +9,8 @@
 #include <vector>
 
 Program::Program(std::vector<IR> in) : instrs(std::move(in)) {
-  // foldRepeated();
-  // foldMovement();
+  foldRepeated();
+  foldMovement();
   // foldMultiply();
   // foldAssign();
   findLoops();
