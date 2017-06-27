@@ -35,6 +35,9 @@ Trace::State Trace::record(const IR *ir) {
   if (isLoopHead(ir)) {
     lastState = Trace::State::Complete;
     goto done;
+  } else if (ir->getOp() == Op::Jit) {
+    invalidate();
+    goto done;
   } else if (ir->getOp() == Op::Label && instrs.size() > 0) {
     // inner loop detected, abort
     invalidate();
