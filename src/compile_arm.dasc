@@ -25,6 +25,7 @@ void Trace::compile(const std::vector<Trace>& traces) {
 
   |.section code
   dasm_init(&d, DASM_MAXSECTION);
+  |
 
   |.globals lbl_
   void* labels[lbl__MAX];
@@ -36,22 +37,43 @@ void Trace::compile(const std::vector<Trace>& traces) {
   dasm_State** Dst = &d;
   |->bf_trace:
 
+  |.define PTR, r4
+  |.define SCRATCH1, r5
+
+  | push {r4, r5, lr}
+
+  | mov PTR, r0
+
   |->loop:
   for (const auto *ir : instrs) {
     switch (ir->getOp()) {
     case IncPtr:
+      | add PTR, PTR, #ir->getA()
       break;
     case DecPtr:
+      | sub PTR, PTR, #ir->getA()
       break;
     case IncByte:
+      | ldrb SCRATCH1, [PTR, #ir->getB()]
+      | add SCRATCH1, SCRATCH1, #ir->getA()
+      | strb SCRATCH1, [PTR, #ir->getB()]
       break;
     case DecByte:
+      | ldrb SCRATCH1, [PTR, #ir->getB()]
+      | sub SCRATCH1, SCRATCH1, #ir->getA()
+      | strb SCRATCH1, [PTR, #ir->getB()]
       break;
     case PutChar:
+      | mov r0, PTR
+      | bl ->putchar
       break;
     case GetChar:
+      assert(false);
       break;
     case Label:
+      | ldrb SCRATCH1, [PTR]
+      | cmp SCRATCH1, #0
+      | beq ->cleanup
       break;
     case Jmp:
       | b ->loop
@@ -71,6 +93,8 @@ void Trace::compile(const std::vector<Trace>& traces) {
   }
 
   |->cleanup:
+
+  | pop {r4, r5, pc}
 
   dasm_link(&d, &mcodeSz);
 
