@@ -110,7 +110,7 @@ void Trace::compile(const std::vector<Trace>& traces) {
       | movw SCRATCH1, #(uint32_t)(intptr_t)traces.at(ir->getB()).getMcode()
       | movt SCRATCH1, #(uint32_t)(intptr_t)traces.at(ir->getB()).getMcode() >> 16
       | mov r0, PTR
-      | bx SCRATCH1
+      | blx SCRATCH1
       | mov PTR, r0
       }
       break;
