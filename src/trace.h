@@ -40,7 +40,7 @@ private:
   State lastState;
 
   void *mcode;
-  size_t mcodeSz;
+  std::size_t mcodeSz;
 };
 
 #endif // TRACE_H
