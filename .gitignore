@@ -1,4 +1,4 @@
-src/compile.cc
+src/compile*.cc
 *.o
 *.d
 bf
