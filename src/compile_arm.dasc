@@ -79,12 +79,19 @@ void Trace::compile(const std::vector<Trace>& traces) {
       | b ->loop
       break;
     case Assign:
+      assert(false);
       break;
     case MulAdd:
+      assert(false);
       break;
     case MulSub:
+    assert(false);
       break;
     case Jit:
+      | mov SCRATCH1, (uint64_t)(intptr_t)traces.at(ir->getB()).getMcode()
+      | mov r0, PTR
+      | bl SCRATCH1
+      | mov PTR, r0
       break;
     case Hlt:
       assert(false);
