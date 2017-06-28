@@ -2,10 +2,10 @@ EXE=bf
 OBJS=parser.o ir.o program.o vm.o main.o
 DEPS=$(OBJS:.o=.d)
 
-CC=gcc
-CXX=g++
-CXXFLAGS=-std=c++11 -Wall -Werror -Os -g
-LDFLAGS=
+C=clang
+CXX=clang++
+CXXFLAGS=-std=c++11 -Wall -Werror -flto -Ofast -march=native -g
+LDFLAGS=-flto
 LUA=luajit
 
 TESTARCH=$(shell $(CC) -E arch.h -dM)
