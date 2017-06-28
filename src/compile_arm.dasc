@@ -86,24 +86,20 @@ void Trace::compile(const std::vector<Trace>& traces) {
       break;
     case MulAdd:
       | ldrb SCRATCH1, [PTR]
-      | ldrb SCRATCH2, [PTR, #ir->getB()]
-
       | mov SCRATCH3, #ir->getA()
       | mul SCRATCH1, SCRATCH1, SCRATCH3
 
+      | ldrb SCRATCH2, [PTR, #ir->getB()]
       | add SCRATCH1, SCRATCH2, SCRATCH1
-
       | strb SCRATCH1, [PTR, #ir->getB()]
       break;
     case MulSub:
       | ldrb SCRATCH1, [PTR]
-      | ldrb SCRATCH2, [PTR, #ir->getB()]
-
       | mov SCRATCH3, #ir->getA()
       | mul SCRATCH1, SCRATCH1, SCRATCH3
 
+      | ldrb SCRATCH2, [PTR, #ir->getB()]
       | sub SCRATCH1, SCRATCH2, SCRATCH1
-
       | strb SCRATCH1, [PTR, #ir->getB()]
       break;
     case Jit: {
